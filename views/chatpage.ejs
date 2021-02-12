@@ -1,0 +1,143 @@
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet">
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Nunito', sans-serif;
+    }
+    span{
+        display: block;
+    }
+    .sendButton:hover{
+        cursor: pointer;
+    }
+</style>
+<body>
+<div style="margin: 5%;">
+    <span style="text-align: center; font-weight: bolder; font-size: large;"><%= username %> </span>
+    <div style="margin:1%;"></div>
+    <span style="text-align: center; font-weight: bolder; font-size: large;"><%= room %> </span>
+</div>
+<div style="width: 70%; margin:auto; border: 1px solid black; background-color:#F8F8F8;">
+    <div style="float: left; width: 30%; height: 50vh;">
+        <div class="header" style="font-weight: bold; text-align: center; height:13%; padding-top: 5%;">Participants</div>
+        <div class="userDisplay" style="height:87%; overflow: auto;"></div>
+    </div>
+
+    <div style="float: right; width: 70%;  border-left: 1px solid black; height: 50vh;">
+
+        <div style=" width:100%; padding:10px; height: 45vh; overflow-y: auto;" class="messageDisplay"></div>
+
+        <div style=" width: 100%; height:5vh;">
+            <form class="form" style="width: 100%; display:flex;">
+                <input type="text" placeholder="Enter your message here" style="width: 90%; height:5vh;" class="messageText">
+                <button role="submit" class="sendButton" style="height:5vh; box-sizing: border-box; width:10%;"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            </form>
+        </div>
+
+    </div>
+
+    
+    <div style="clear: both; height: 0px;"></div>
+</div>
+
+<div style="display: flex; justify-content: center;">
+    <button style="margin-top: 2%; border:none; border-radius: 2px; padding:8px;  background-color:#ff4444;"><a style="text-decoration: none; color: white; font-weight:800;" href="/" onclick="leave()">Leave</a></button>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+
+    socket=io({transports: ['websocket'], upgrade: false});
+    
+    socket.emit('inform',{username:'<%= username %>' ,room:'<%= room %>'})
+
+    document.querySelector('.sendButton').addEventListener('click',(e)=>
+    {
+        e.preventDefault();
+        socket.emit('message-sent',document.querySelector('.messageText').value);
+        document.querySelector('.messageText').value='';
+    })
+
+    messagebox=document.querySelector('.messageDisplay');
+    
+    socket.on('write',(data)=>
+    {
+        let flag=1;
+        name=data[3];
+        space=data[2];
+
+        parent=document.createElement('div');
+        header=document.createElement('div');
+        if(name!='you')
+        {
+            flag=0;
+            header.innerHTML=name;
+            header.style.fontSize='small';
+            header.style.fontWeight='bold';
+            header.style.padding='2px';
+            header.style.paddingLeft='5px';
+        }
+        div=document.createElement('div');
+        div.style.padding='5px';
+        div.innerHTML=data[0];
+        date=document.createElement('div');
+        date.style.textAlign='right';
+        date.innerText=data[1];
+        date.style.paddingRight='5px';
+        date.style.fontSize="small";
+        date.style.color='grey';
+        parent.append(header);
+        parent.append(div);
+        parent.append(date);
+        parent.style.marginBottom='10px';
+        if(space=='right')
+        {
+          parent.style.marginLeft='40%';
+        }
+        else if(space=='left'){
+            parent.style.marginRight='40%';
+        }
+        else{
+            parent.style.marginRight='5%';
+            parent.style.marginLeft='5%';
+        }
+        if(flag)
+        {parent.style.backgroundColor='#fae1dd';}
+        else
+        {parent.style.backgroundColor='#caffbf';}
+
+        messagebox.append(parent);
+
+        messagebox.scrollTop = messagebox.scrollHeight;
+    })
+
+    function leave()
+    {
+        alert('you are going to leave the chat')
+        socket.emit('disconnect');
+    }
+    userdisplay=document.querySelector('.userDisplay')
+    userdisplay.innerText='<b> Participants</b>'
+    userdisplay.style.padding='2%';
+    socket.on('updatelist',(list)=>
+    {
+        userdisplay.innerText="";
+       for(let user of list)
+       {
+        span=document.createElement('span')
+        span.innerText=user;
+        span.style.display='block';
+        span.style.marginTop='1vh';
+        span.style.textAlign='center';
+        span.style.fontWeight='bold';
+        userdisplay.append(span);
+       }
+    })
+    
+</script>
+</body>
