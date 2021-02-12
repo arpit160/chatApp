@@ -1,5 +1,6 @@
 express=require('express');
 path=require('path')
+mongoose = require('mongoose')
 socketio=require('socket.io')
 http=require('http')
 moment=require('moment')
@@ -8,6 +9,13 @@ bodyParser = require('body-parser');
 app=express();
 server=http.createServer(app)
 let currentuser;
+
+mongoose.connect('mongodb://localhost:27017/chatapp', {useNewUrlParser: true, useUnifiedTopology: true}).then(()=>
+{
+    console.log('database connected')
+})
+.catch((e)=>{console.log(e)});
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.engine('ejs', engine);
