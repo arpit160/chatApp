@@ -64,18 +64,15 @@
     })
 
     messagebox=document.querySelector('.messageDisplay');
-    
+    let arr=[];
     socket.on('write',(data)=>
     {
-        let flag=1;
         name=data[3];
         space=data[2];
-
         parent=document.createElement('div');
         header=document.createElement('div');
-        if(name!='you')
+        if(name!='you' && name!='Admin')
         {
-            flag=0;
             header.innerHTML=name;
             header.style.fontSize='small';
             header.style.fontWeight='bold';
@@ -106,19 +103,25 @@
             parent.style.marginRight='5%';
             parent.style.marginLeft='5%';
         }
-        if(flag)
-        {parent.style.backgroundColor='#fae1dd';}
-        else
+        if(name=='Admin')
+        {parent.style.backgroundColor='#fdffb6';}
+        else if(name=='you')
         {parent.style.backgroundColor='#caffbf';}
+        else{
+            parent.style.backgroundColor='#fae1dd';
+        }
 
         messagebox.append(parent);
 
         messagebox.scrollTop = messagebox.scrollHeight;
+        arr.push(JSON.stringify({space:space,date:data[1],by:name,actual_msg:data[0]}))
     })
 
     function leave()
     {
+        alert(arr)
         alert('you are going to leave the chat')
+        socket.emit('save',arr);
         socket.emit('disconnect');
     }
     userdisplay=document.querySelector('.userDisplay')
