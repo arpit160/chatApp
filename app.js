@@ -59,7 +59,7 @@ io.on('connection',(socket)=>
         {
             msg_arr.push(JSON.stringify(msgs[i]));
             console.log('i is',i)
-            socket.emit('write',[msgs[i].actual_msg,msgs[i].date,msgs[i].space,msgs[i].by])
+            socket.emit('write',[msgs[i].actual_msg,msgs[i].date,msgs[i].space,msgs[i].by,0])
         }}
         date=moment().format('h:mm a')
         console.log('inside inform')
@@ -70,21 +70,25 @@ io.on('connection',(socket)=>
         socket.join(data.room)
         if(msg_arr.length==0)
         {
-            socket.emit('write',[`<center>Welcome (${data.username}) to our chat application</center>`,date,'center','Admin'])
+            socket.emit('write',[`<b><center>Welcome (${data.username}) to our chat application</center></b>`,date,'center','Admin',1])
         }
-        socket.broadcast.to(data.room).emit('write',[`<center><b>${data.username}</b> has joined the chat</center>`,date,'center','Admin'])
+        socket.broadcast.to(data.room).emit('write',[`<center><b>${data.username}</b> has joined the chat</center>`,date,'center','Admin',1])
         io.to(data.room).emit('updatelist',roomusers)
+        socket.emit('askfordisplaydate');
         
     })
-     
+     socket.on('displaydate',(todaydate)=>
+     {
+         socket.emit('write',[`<b><center>${todaydate}</center></b>`,'','center','Admin',1]);
+     })
     socket.on('message-sent',(message)=>
     {
         date=moment().format('h:mm a')
         console.log('msg inside')
         let currentuser=getcurrentuser(socket.id)
         console.log('currentuser',currentuser)
-        socket.emit('write',[message,date,'right','you']);
-        socket.broadcast.to(currentuser.room).emit('write',[message,date,'left',currentuser.username]);
+        socket.emit('write',[message,date,'right','you',1]);
+        socket.broadcast.to(currentuser.room).emit('write',[message,date,'left',currentuser.username,1]);
     })
 
      socket.on('save',async(arr)=>
@@ -129,7 +133,7 @@ io.on('connection',(socket)=>
         console.log('roomusersexcept',roomusersexcept)
         removeuser(socket.id)
         print();
-        socket.broadcast.to(currentuser.room).emit('write',[`<center><b>${currentuser.username}</b> left the chat</center>`,date,'center','Admin'])
+        socket.broadcast.to(currentuser.room).emit('write',[`<center><b>${currentuser.username}</b> left the chat</center>`,date,'center','Admin',1])
         socket.broadcast.to(currentuser.room).emit('updatelist',roomusersexcept);
         
     })

@@ -51,10 +51,19 @@
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
+    const timeElapsed = Date.now();
+    const today = new Date(timeElapsed);
+    todaydate=today.toLocaleDateString()
 
     socket=io({transports: ['websocket'], upgrade: false});
     
     socket.emit('inform',{username:'<%= username %>' ,room:'<%= room %>'})
+    socket.on('askfordisplaydate',()=>
+    {
+        socket.emit('displaydate',todaydate);
+    })
+    
+    
 
     document.querySelector('.sendButton').addEventListener('click',(e)=>
     {
@@ -64,9 +73,12 @@
     })
 
     messagebox=document.querySelector('.messageDisplay');
+    
+
     let arr=[];
     socket.on('write',(data)=>
     {
+        flag=data[4];
         name=data[3];
         space=data[2];
         parent=document.createElement('div');
@@ -103,7 +115,14 @@
             parent.style.marginRight='5%';
             parent.style.marginLeft='5%';
         }
-        if(name=='Admin')
+        if(data[1]=='')
+        { 
+            parent.style.backgroundColor='#ade8f4';
+            parent.style.marginRight='30%';
+            parent.style.marginLeft='30%';
+            parent.style.borderRadius='5px';
+        }
+        else if(name=='Admin')
         {parent.style.backgroundColor='#fdffb6';}
         else if(name=='you')
         {parent.style.backgroundColor='#caffbf';}
@@ -114,7 +133,8 @@
         messagebox.append(parent);
 
         messagebox.scrollTop = messagebox.scrollHeight;
-        arr.push(JSON.stringify({space:space,date:data[1],by:name,actual_msg:data[0]}))
+        if(flag)
+        arr.push(JSON.stringify({space:space,date:data[1],by:name,actual_msg:data[0]}));
     })
 
     function leave()
