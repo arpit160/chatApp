@@ -1,6 +1,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     *{
         margin: 0;
@@ -15,7 +16,7 @@
         cursor: pointer;
     }
 </style>
-<body>
+<body >
 <div style="margin: 5%;">
     <span style="text-align: center; font-weight: bolder; font-size: large;"><%= username %> </span>
     <div style="margin:1%;"></div>
@@ -81,56 +82,76 @@
         flag=data[4];
         name=data[3];
         space=data[2];
-        parent=document.createElement('div');
-        header=document.createElement('div');
-        if(name!='you' && name!='Admin')
-        {
-            header.innerHTML=name;
-            header.style.fontSize='small';
-            header.style.fontWeight='bold';
-            header.style.padding='2px';
-            header.style.paddingLeft='5px';
-        }
-        div=document.createElement('div');
-        div.style.padding='5px';
-        div.innerHTML=data[0];
-        date=document.createElement('div');
-        date.style.textAlign='right';
-        date.innerText=data[1];
-        date.style.paddingRight='5px';
-        date.style.fontSize="small";
-        date.style.color='grey';
-        parent.append(header);
-        parent.append(div);
-        parent.append(date);
-        parent.style.marginBottom='10px';
-        if(space=='right')
-        {
-          parent.style.marginLeft='40%';
-        }
-        else if(space=='left'){
-            parent.style.marginRight='40%';
-        }
-        else{
-            parent.style.marginRight='5%';
-            parent.style.marginLeft='5%';
-        }
-        if(data[1]=='')
-        { 
-            parent.style.backgroundColor='#ade8f4';
-            parent.style.marginRight='30%';
-            parent.style.marginLeft='30%';
-            parent.style.borderRadius='5px';
-        }
-        else if(name=='Admin')
-        {parent.style.backgroundColor='#fdffb6';}
-        else if(name=='you')
-        {parent.style.backgroundColor='#caffbf';}
-        else{
-            parent.style.backgroundColor='#fae1dd';
-        }
+        time=data[1];
+        msg=data[0];
 
-        messagebox.append(parent);
+        maindiv=document.createElement('div');
+        div1=document.createElement('div');
+        div2=document.createElement('div');
+        maindiv.append(div1);
+        maindiv.append(div2);
+        maindiv.style.display='flex';
+        div1.style.width='95%';
+        div2.style.width='5%';
+        maindiv.style.position='relative';
+        div2.style.position='absolute';
+        div2.style.textAlign='right'
+        div2.style.bottom='0';
+        div2.style.right='0';
+        div2.style.fontSize='x-small';
+        maindiv.style.padding='1%';
+        div2.style.padding='1%';
+        if(name=='Admin')
+        {
+            div1.style.width='100%';
+            div2.style.width='0%';
+            div1.style.padding='2%';
+            maindiv.style.backgroundColor='#fdffb6';
+            maindiv.style.fontSize='small';
+            maindiv.style.width='50%';
+            maindiv.style.margin='auto';
+            div1.innerHTML=msg;
+            if(time=='')
+            {
+                maindiv.style.width='15%';
+                maindiv.style.fontSize='x-small'; 
+            }
+        }
+        else if(name=='you')
+        {
+            div1.style.width='80%';
+            div2.style.width='20%';
+            maindiv.style.backgroundColor='#caffbf';
+            maindiv.style.width='60%';
+            maindiv.style.marginRight='0';
+            maindiv.style.marginLeft='40%';
+            div1.innerHTML=msg;
+            div2.innerHTML=time;
+        }
+        else{
+            div11=document.createElement('div');
+            div12=document.createElement('div');
+            div11.style.fontSize='small';
+            div11.style.fontWeight='bold';
+            div12.paddingTop='2%';
+            div11.innerHTML=name;
+            div12.innerHTML=msg;
+            div1.append(div11);
+            div1.append(div12);
+            div1.style.display='flex';
+            div1.style.flexDirection='column'
+            div1.style.width='80%';
+            div2.style.width='20%';
+            maindiv.style.backgroundColor='#fae1dd';
+            maindiv.style.width='60%';
+            maindiv.style.marginLeft='0';
+            maindiv.style.marginRight='40%';
+            div2.innerHTML=time;
+        }
+        
+        maindiv.style.marginBottom='10px';
+
+        messagebox.append(maindiv);
 
         messagebox.scrollTop = messagebox.scrollHeight;
         if(flag)

@@ -44,7 +44,7 @@ app.get('/chat',(req,res)=>
 })
 
 io=socketio(server);
-console.log('apple');
+
 io.on('connection',(socket)=>
 {
     let msg_arr=[]
@@ -58,11 +58,11 @@ io.on('connection',(socket)=>
         for(let i=0;i<msgs.length;i++)
         {
             msg_arr.push(JSON.stringify(msgs[i]));
-            console.log('i is',i)
+
             socket.emit('write',[msgs[i].actual_msg,msgs[i].date,msgs[i].space,msgs[i].by,0])
         }}
         date=moment().format('h:mm a')
-        console.log('inside inform')
+
         console.log('data',data)
         bindinfo(socket.id,data.username,data.room);
         let roomusers=getroomusers(data.room);
@@ -84,7 +84,6 @@ io.on('connection',(socket)=>
     socket.on('message-sent',(message)=>
     {
         date=moment().format('h:mm a')
-        console.log('msg inside')
         let currentuser=getcurrentuser(socket.id)
         console.log('currentuser',currentuser)
         socket.emit('write',[message,date,'right','you',1]);
@@ -126,7 +125,7 @@ io.on('connection',(socket)=>
     socket.on('disconnect',()=>
     {
         date=moment().format('h:mm a')
-        console.log('disconnect inside')        
+        console.log('disconnecting..')        
         let currentuser=getcurrentuser(socket.id)
         let roomusersexcept=getroomusersexcept(socket.id,currentuser.room);
         console.log('currentuser',currentuser);

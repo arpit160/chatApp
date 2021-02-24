@@ -1,6 +1,6 @@
 users=[]
-console.log('inside me')
-console.log(users);
+
+console.log("users are",users);
 function bindinfo(sid,username,room)
 {
   users.push({sid,username,room})
