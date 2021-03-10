@@ -25,21 +25,21 @@
     }
 </style>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet">
-<body style="background-image:url('img4.jpg');">
+<body style="background-image:url('img6.png');">
 <div style="width: 30%; margin:auto; margin-top: 10%; border: 1px solid black; padding: 20px; border-radius: 5px; background-color: #F8F8F8;">
     <div style="font-size: large; display: flex; justify-content: center; padding: 2%; font-weight: bold;">
-        <i class="far fa-comment-dots" style="margin-right: 2%;"></i> Welcome to our chatting application.
+        <i class="far fa-comment-dots" style="margin-right: 2%;"></i> Welcome to our Chat application.
     </div>
     <div>
         <form action="/chat" method="GET">
             <label for="username">Username</label>
-            <input type="text" name="username" id="username" class="ip1" style="width:100%;"> 
+            <input type="text" name="username" id="username" class="ip1" style="width:100%; " required> 
             <br><br>
             
             <label for="room">Room</label>
-            <input type="text" name="room"  id="room" class="ip2" style="width:100%;">
+            <input type="text" name="room"  id="room" class="ip2" style="width:100%;" required>
             <br><br>
-            <input type="submit" onclick="inform()">
+            <button onclick="inform()" style="padding: 2%; font-weight: bold;">Join</button>
         </form>  
     </div>
 </div>

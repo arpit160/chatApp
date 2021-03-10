@@ -2,6 +2,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
 <style>
     *{
         margin: 0;
@@ -15,16 +16,22 @@
     .sendButton:hover{
         cursor: pointer;
     }
+    emoji-picker
+    {
+        width:70%;
+        height:30%;
+        margin:0% 15% 0 15%;
+    }
 </style>
-<body style="background-image:url('img4.jpg');">
+<body style="background-image:url('img6.png');">
 <div style="margin: 5%;">
-    <span style="text-align: center; font-weight: bolder; font-size: large;"><%= username %> </span>
+    <span style="text-align: center; font-weight: bolder; font-size: large;"><i class="fa fa-user" style="margin-right: .9%;"></i><%= username %> </span>
     <div style="margin:1%;"></div>
-    <span style="text-align: center; font-weight: bolder; font-size: large;"><%= room %> </span>
+    <span style="text-align: center; font-weight: bolder; font-size: large;"><i class="fa fa-room" style="margin-right: .9%;"></i><%= room %> </span>
 </div>
 <div style="width: 70%; margin:auto; border: 1px solid black; background-color:#F8F8F8;">
     <div style="float: left; width: 30%; height: 50vh;">
-        <div class="header" style="font-weight: bold; text-align: center; height:13%; padding-top: 5%;">Participants</div>
+        <div class="header" style="font-weight: bold; text-align: center; height:13%; padding-top: 5%; ">Users</div>
         <div class="userDisplay" style="height:87%; overflow: auto;"></div>
     </div>
 
@@ -34,19 +41,19 @@
 
         <div style=" width: 100%; height:5vh;">
             <form class="form" style="width: 100%; display:flex;">
-                <input type="text" placeholder="Enter your message here" style="width: 90%; height:5vh;" class="messageText">
+                <input type="text" placeholder="Enter your message here" style="width: 85%; height:5vh;" class="messageText">
+                <span style="width: 5%; height:5vh; display: flex; align-items: center; justify-content: center; border: 1px solid black; background-color: aliceblue; cursor: pointer;" class="emojibtn"><i class="fa fa-smile" style="color:black; padding:2%;"></i></span>
                 <button role="submit" class="sendButton" style="height:5vh; box-sizing: border-box; width:10%;"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
             </form>
         </div>
-
-    </div>
-
-    
+    </div>   
     <div style="clear: both; height: 0px;"></div>
 </div>
-
+<div class="emojipick" style="display: none;" >
+    <emoji-picker></emoji-picker>
+</div>
 <div style="display: flex; justify-content: center;">
-    <button style="margin-top: 2%; border:none; border-radius: 2px; padding:8px;  background-color:#ff4444;"><a style="text-decoration: none; color: white; font-weight:800;" href="/" onclick="leave()">Leave</a></button>
+    <button style="margin-top: 2%; margin-bottom: 3%; border:none; border-radius: 2px; padding:8px;  background-color:#ff4444;"><a style="text-decoration: none; color:white; font-weight:800;" href="/" onclick="leave()">Leave</a></button>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -160,7 +167,6 @@
 
     function leave()
     {
-        alert(arr)
         alert('you are going to leave the chat')
         socket.emit('save',arr);
         socket.emit('disconnect');
@@ -182,6 +188,22 @@
         userdisplay.append(span);
        }
     })
-    
+    document.querySelector('.emojibtn').addEventListener('click',()=>
+    {
+        let x=document.querySelector('.emojipick');
+        //console.log(x);
+        if(x.style.display=='block')
+        {
+            x.style.display='none';
+        }
+        else{
+            x.style.display='block';
+        document.querySelector('emoji-picker').addEventListener('emoji-click', (e)=>
+        {
+           msgbox=document.querySelector('.messageText');
+           msgbox.value=msgbox.value+e.detail.unicode;
+        });
+        }
+    })
 </script>
 </body>
