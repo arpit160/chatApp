@@ -23,11 +23,10 @@
         margin:0% 15% 0 15%;
     }
 </style>
-<body style="background-image:url('img6.png');">
-<div style="margin: 5%;">
-    <span style="text-align: center; font-weight: bolder; font-size: large;"><i class="fa fa-user" style="margin-right: .9%;"></i><%= username %> </span>
-    <div style="margin:1%;"></div>
-    <span style="text-align: center; font-weight: bolder; font-size: large;"><i class="fa fa-room" style="margin-right: .9%;"></i><%= room %> </span>
+<body style="background-image:url('imgback.png');">
+<div style="background-color:#83c5be; border: 1px solid #023e8a; border-bottom: 0px; margin: 5%; margin-bottom: 0%; display: flex; flex-direction: row; width: 70%; margin-left: 15%; margin-right: 15%; padding: 1% 3% .9% 3%; justify-content: space-between; align-items: center;">
+    <span style="text-align: center; font-weight: bolder; display: flex; flex-direction: row;  align-items: center;"><span style="border:1px solid #0096c7; background-color: #caf0f8; padding:13px;border-radius: 50%; margin-right: 15%;"><i class="fa fa-user"></i></span><%= username %> </span>
+    <span style="text-align: center; font-weight: bolder; display: inline-block;"><i class="fa fa-room" style="margin-right: .9%;"></i><%= room %> </span>
 </div>
 <div style="width: 70%; margin:auto; border: 1px solid black; background-color:#F8F8F8;">
     <div style="float: left; width: 30%; height: 50vh;">
@@ -172,8 +171,7 @@
         socket.emit('disconnect');
     }
     userdisplay=document.querySelector('.userDisplay')
-    userdisplay.innerText='<b> Participants</b>'
-    userdisplay.style.padding='2%';
+    
     socket.on('updatelist',(list)=>
     {
         userdisplay.innerText="";
