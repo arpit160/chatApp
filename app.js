@@ -8,10 +8,13 @@ engine = require('ejs-mate')
 bodyParser = require('body-parser');
 const { nextTick } = require('process');
 const {Content}=require('./models/chat')
+dotenv=require('dotenv')
+dotenv.config();
+
 app=express();
 server=http.createServer(app)
 
-mongoose.connect('mongodb://localhost:27017/chatapp', {useNewUrlParser: true, useUnifiedTopology: true}).then(()=>
+mongoose.connect(process.env.dburl, {useNewUrlParser: true, useUnifiedTopology: true}).then(()=>
 {
     console.log('database connected')
 })
@@ -138,8 +141,9 @@ io.on('connection',(socket)=>
     })
 })
 
+port=process.env.port||3000;
 
-server.listen(3000,()=>
+server.listen(port,()=>
 {
     console.log('listening on port 3000...')
 })
