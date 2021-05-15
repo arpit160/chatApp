@@ -1,207 +1,215 @@
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
-<style>
-    *{
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Nunito', sans-serif;
-    }
-    span{
-        display: block;
-    }
-    .sendButton:hover{
-        cursor: pointer;
-    }
-    emoji-picker
-    {
-        width:70%;
-        height:30%;
-        margin:0% 15% 0 15%;
-    }
-</style>
-<body style="background-image:url('imgback.png');">
-<div style="background-color:#83c5be; border: 1px solid #023e8a; border-bottom: 0px; margin: 5%; margin-bottom: 0%; display: flex; flex-direction: row; width: 70%; margin-left: 15%; margin-right: 15%; padding: 1% 3% .9% 3%; justify-content: space-between; align-items: center;">
-    <span style="text-align: center; font-weight: bolder; display: flex; flex-direction: row;  align-items: center;"><span style="border:1px solid #0096c7; background-color: #caf0f8; padding:13px;border-radius: 50%; margin-right: 15%;"><i class="fa fa-user"></i></span><%= username %> </span>
-    <span style="text-align: center; font-weight: bolder; display: inline-block;"><i class="fa fa-room" style="margin-right: .9%;"></i><%= room %> </span>
-</div>
-<div style="width: 70%; margin:auto; border: 1px solid black; background-color:#F8F8F8;">
-    <div style="float: left; width: 30%; height: 50vh;">
-        <div class="header" style="font-weight: bold; text-align: center; height:13%; padding-top: 5%; ">Users</div>
-        <div class="userDisplay" style="height:87%; overflow: auto;"></div>
-    </div>
-
-    <div style="float: right; width: 70%;  border-left: 1px solid black; height: 50vh;">
-
-        <div style=" width:100%; padding:10px; height: 45vh; overflow-y: auto;" class="messageDisplay"></div>
-
-        <div style=" width: 100%; height:5vh;">
-            <form class="form" style="width: 100%; display:flex;">
-                <input type="text" placeholder="Enter your message here" style="width: 85%; height:5vh;" class="messageText">
-                <span style="width: 5%; height:5vh; display: flex; align-items: center; justify-content: center; border: 1px solid black; background-color: aliceblue; cursor: pointer;" class="emojibtn"><i class="fa fa-smile" style="color:black; padding:2%;"></i></span>
-                <button role="submit" class="sendButton" style="height:5vh; box-sizing: border-box; width:10%;"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-            </form>
-        </div>
-    </div>   
-    <div style="clear: both; height: 0px;"></div>
-</div>
-<div class="emojipick" style="display: none;" >
-    <emoji-picker></emoji-picker>
-</div>
-<div style="display: flex; justify-content: center;">
-    <button style="margin-top: 2%; margin-bottom: 3%; border:none; border-radius: 2px; padding:8px;  background-color:#ff4444;"><a style="text-decoration: none; color:white; font-weight:800;" href="/" onclick="leave()">Leave</a></button>
-</div>
-
-<script src="/socket.io/socket.io.js"></script>
-
-<script>
-    const timeElapsed = Date.now();
-    const today = new Date(timeElapsed);
-    todaydate=today.toLocaleDateString()
-
-    socket=io({transports: ['websocket'], upgrade: false});
-    
-    socket.emit('inform',{username:'<%= username %>' ,room:'<%= room %>'})
-    socket.on('askfordisplaydate',()=>
-    {
-        socket.emit('displaydate',todaydate);
-    })
-    
-    
-
-    document.querySelector('.sendButton').addEventListener('click',(e)=>
-    {
-        e.preventDefault();
-        socket.emit('message-sent',document.querySelector('.messageText').value);
-        document.querySelector('.messageText').value='';
-    })
-
-    messagebox=document.querySelector('.messageDisplay');
-    
-
-    let arr=[];
-    socket.on('write',(data)=>
-    {
-        flag=data[4];
-        name=data[3];
-        space=data[2];
-        time=data[1];
-        msg=data[0];
-
-        maindiv=document.createElement('div');
-        div1=document.createElement('div');
-        div2=document.createElement('div');
-        maindiv.append(div1);
-        maindiv.append(div2);
-        maindiv.style.display='flex';
-        div1.style.width='95%';
-        div2.style.width='5%';
-        maindiv.style.position='relative';
-        div2.style.position='absolute';
-        div2.style.textAlign='right'
-        div2.style.bottom='0';
-        div2.style.right='0';
-        div2.style.fontSize='x-small';
-        maindiv.style.padding='1%';
-        div2.style.padding='1%';
-        if(name=='Admin')
-        {
-            div1.style.width='100%';
-            div2.style.width='0%';
-            div1.style.padding='2%';
-            maindiv.style.backgroundColor='#fdffb6';
-            maindiv.style.fontSize='small';
-            maindiv.style.width='50%';
-            maindiv.style.margin='auto';
-            div1.innerHTML=msg;
-            if(time=='')
-            {
-                maindiv.style.width='15%';
-                maindiv.style.fontSize='x-small'; 
-            }
+<html>
+    <head>
+        <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
         }
-        else if(name=='you')
-        {
-            div1.style.width='80%';
-            div2.style.width='20%';
-            maindiv.style.backgroundColor='#caffbf';
-            maindiv.style.width='60%';
-            maindiv.style.marginRight='0';
-            maindiv.style.marginLeft='40%';
-            div1.innerHTML=msg;
-            div2.innerHTML=time;
-        }
-        else{
-            div11=document.createElement('div');
-            div12=document.createElement('div');
-            div11.style.fontSize='small';
-            div11.style.fontWeight='bold';
-            div12.paddingTop='2%';
-            div11.innerHTML=name;
-            div12.innerHTML=msg;
-            div1.append(div11);
-            div1.append(div12);
-            div1.style.display='flex';
-            div1.style.flexDirection='column'
-            div1.style.width='80%';
-            div2.style.width='20%';
-            maindiv.style.backgroundColor='#fae1dd';
-            maindiv.style.width='60%';
-            maindiv.style.marginLeft='0';
-            maindiv.style.marginRight='40%';
-            div2.innerHTML=time;
+        ::-webkit-scrollbar { 
+            display: none; 
         }
         
-        maindiv.style.marginBottom='10px';
+    </style>
+    </head>
+    <body style="overflow:scroll; background-image:url('imgback.png'); ">
+        
 
-        messagebox.append(maindiv);
+    <div style="height: 60%; width: 70%; margin: auto; margin-top: 50px; border: 1px solid black; background-color: whitesmoke; ">
+    	<div style="height:10%; overflow-x: scroll; display: flex; justify-content: space-around; align-content: center; padding: 10px; border: 1px solid black;">
+    	<div><h4><%= username %></h4></div>
+    	<div><h4><%= room %></h4></div>
+		</div>
+		<div style="display: flex; height: 90%;">
+    	<div style="width: 25%;">
+    		<div style="border: 1px solid black; height: 10%; display: flex; align-items: center; justify-content: center;">
+    			<h4>Users</h4>
+    		</div>
+    		<div class="userDisplay" style=" padding: 5px; overflow: scroll;border: 1px solid black; height: 90%;">	
+    		</div>
+    	</div>
+    	<div style="width: 75%;">
+    		<div style="height: 90%; padding: 10px; overflow-y: scroll; border: 1px solid black; " class="messageDisplay">
+    			
+    		</div>
+    		<div style="height: 10%; ">
+    			<form class="form" style="width: 100%; display:flex; height: 100%;">
+                    <input type="text" placeholder="Enter your message here" style="width: 80%; height: inherit; border: 1px solid black;" class="messageText">
+                    <div style="width: 10%; height:inherit; display: flex; align-items: center; justify-content: center; border: 1px solid black; background-color: aliceblue; cursor: pointer;" class="emojibtn"><i class="fa fa-smile" style="color:black; "></i></div>
+                    <button role="submit" class="sendButton" style="height:inherit;  width:10%;"><i class="fa fa-paper-plane"></i></button>
+                </form>
+    		</div>
+    	</div>
+    	</div>
+        <div class="emojipick" style="display: none; width: 100%;" >
+            <emoji-picker style="width: 100%; height: 200px;"></emoji-picker>
+        </div>
+    </div>
 
-        messagebox.scrollTop = messagebox.scrollHeight;
-        if(flag)
-        arr.push(JSON.stringify({space:space,date:data[1],by:name,actual_msg:data[0]}));
-    })
-
-    function leave()
-    {
-        alert('you are going to leave the chat')
-        socket.emit('save',arr);
-        socket.emit('disconnect');
-    }
-    userdisplay=document.querySelector('.userDisplay')
     
-    socket.on('updatelist',(list)=>
-    {
-        userdisplay.innerText="";
-       for(let user of list)
-       {
-        span=document.createElement('span')
-        span.innerText=user;
-        span.style.display='block';
-        span.style.marginTop='1vh';
-        span.style.textAlign='center';
-        span.style.fontWeight='bold';
-        userdisplay.append(span);
-       }
-    })
-    document.querySelector('.emojibtn').addEventListener('click',()=>
-    {
-        let x=document.querySelector('.emojipick');
-        //console.log(x);
-        if(x.style.display=='block')
+    <div style="display: flex; justify-content: center;">
+        <button style="margin-top: 2%; margin-bottom: 3%; border:none; border-radius: 2px; padding:8px;  background-color:#ff4444;"><a style="text-decoration: none; color:white; font-weight:800;" href="/" onclick="leave()">Leave</a></button>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <script>
+        const timeElapsed = Date.now();
+        const today = new Date(timeElapsed);
+        todaydate=today.toLocaleDateString()
+    
+        socket=io({transports: ['websocket'], upgrade: false});
+        
+        socket.emit('inform',{username:'<%= username %>' ,room:'<%= room %>'})
+        socket.on('askfordisplaydate',()=>
         {
-            x.style.display='none';
-        }
-        else{
-            x.style.display='block';
-        document.querySelector('emoji-picker').addEventListener('emoji-click', (e)=>
+            socket.emit('displaydate',todaydate);
+        })
+        
+        
+    
+        document.querySelector('.sendButton').addEventListener('click',(e)=>
         {
-           msgbox=document.querySelector('.messageText');
-           msgbox.value=msgbox.value+e.detail.unicode;
-        });
+            e.preventDefault();
+            socket.emit('message-sent',document.querySelector('.messageText').value);
+            document.querySelector('.messageText').value='';
+        })
+    
+        messagebox=document.querySelector('.messageDisplay');
+        
+    
+        let arr=[];
+        socket.on('write',(data)=>
+        {
+            flag=data[4];
+            name=data[3];
+            space=data[2];
+            time=data[1];
+            msg=data[0];
+    
+            if(name=='Admin')
+            {
+            	maindiv=document.createElement('div');
+                maindiv.style.fontSize='small';
+                maindiv.style.backgroundColor='#fdffb6';
+                maindiv.style.display='table';
+                maindiv.style.padding='5px';
+                maindiv.style.margin='auto';
+                maindiv.style.marginBottom = '15px'
+                maindiv.innerHTML=msg;
+                
+            }
+            else if(name=='you')
+            {
+                div1=document.createElement('div');
+	            div2=document.createElement('div');
+            	maindiv=document.createElement('div');
+                maindiv.append(div2);
+	            maindiv.append(div1);
+	            maindiv.style.backgroundColor='#caffbf';
+	            maindiv.style.marginLeft='40%';
+                maindiv.style.Width='60%';
+	            maindiv.style.padding='10px';
+                div2.style.textAlign ='right'
+                div2.style.fontSize = 'small'
+                div2.style.fontWeight='bold'
+                div1.style.wordWrap = 'break-word';
+
+                div1.innerHTML=msg;
+                div2.innerHTML='-'+" "+time;
+            }
+            else{
+            
+                maindiv=document.createElement('div');
+	            div1=document.createElement('div');
+	            div2=document.createElement('div');
+                div21=document.createElement('div');
+                div22=document.createElement('div');
+                div2.append(div21)
+                div2.append(div22)
+                maindiv.append(div2);
+	            maindiv.append(div1);
+                
+                
+                div21.innerHTML=name;
+                div21.style.fontSize='small'
+                div21.style.fontWeight='bold'
+
+                div22.innerHTML='-'+" "+time;
+                div22.style.fontWeight='bold'
+                div22.style.fontSize = 'small'
+                div22.style.paddingLeft='5px';
+
+                div2.style.display='flex';
+                div2.style.flexWrap='wrap'
+                div2.style.justifyContent='space-between'
+                div2.style.marginBottom='5px';
+
+	            maindiv.style.backgroundColor='#fae1dd';
+                maindiv.style.Width ='50%';
+	            maindiv.style.marginRight ='50%';
+                maindiv.style.padding='10px';
+
+                div1.innerHTML=msg;
+                div1.style.wordWrap ='break-word';
+            }
+            
+            maindiv.style.marginBottom='10px';
+
+    
+            messagebox.append(maindiv);
+    
+            messagebox.scrollTop = messagebox.scrollHeight;
+            if(flag)
+            arr.push(JSON.stringify({space:space,date:data[1],by:name,actual_msg:data[0]}));
+        })
+    
+        function leave()
+        {
+            alert('you are going to leave the chat')
+            socket.emit('save',arr);
+            socket.emit('disconnect');
         }
-    })
-</script>
-</body>
+        userdisplay=document.querySelector('.userDisplay')
+        
+        socket.on('updatelist',(list)=>
+        {
+            userdisplay.innerText="";
+           for(let user of list)
+           {
+            span=document.createElement('span')
+            span.innerText=user;
+            span.style.display='block';
+            span.style.marginTop='3px';
+            span.style.textAlign='center';
+            span.style.fontWeight='bold';
+            userdisplay.append(span);
+           }
+        })
+        document.querySelector('.emojibtn').addEventListener('click',()=>
+        {
+            let x=document.querySelector('.emojipick');
+            //console.log(x);
+            if(x.style.display=='block')
+            {
+                x.style.display='none';
+            }
+            else{
+                x.style.display='block';
+            document.querySelector('emoji-picker').addEventListener('emoji-click', (e)=>
+            {
+               msgbox=document.querySelector('.messageText');
+               msgbox.value=msgbox.value+e.detail.unicode;
+            });
+            }
+        })
+    </script>
+    </body>
+</html>
